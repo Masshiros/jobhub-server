@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const { default: mongoose } = require("mongoose");
 const authRoute = require("./routes/auth.route");
+const userRoute = require("./routes/user.route");
 const app = express();
 dotenv.config();
 const port = process.env.PORT;
@@ -12,6 +13,7 @@ mongoose
   .catch((e) => console.log(e));
 app.use(express.json());
 app.use("/api/", authRoute);
+app.use("/api/user", userRoute);
 app.listen(port || 3000, () =>
   console.log(`Example app listening on port ${port}!`)
 );

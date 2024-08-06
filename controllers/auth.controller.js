@@ -28,9 +28,18 @@ module.exports = {
       const depassword = decryptedPass.toString(CryptoJs.enc.Utf8);
       depassword !== req.body.password &&
         res.status(401).json("Invalid Credentials");
+      const userToken = jwt.sign(
+        {
+          id: user._id,
+          isAdmin: user.isAdmin,
+          isAgent: user.isAgent,
+        },
+        process.env.JWT_SEC,
+        { expiresIn: "21d" }
+      );
       const { password, __v, createdAt, ...others } = user._doc;
 
-      res.status(200).json(others);
+      res.status(200).json(others, userToken);
     } catch (e) {
       res.status(500);
     }
