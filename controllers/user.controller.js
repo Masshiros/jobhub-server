@@ -28,4 +28,21 @@ module.exports = {
       res.status(500).json(e);
     }
   },
+  getUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      const { password, __v, createdAt, updatedAt, ...userData } = user;
+      res.status(200).json(userData);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  },
+  getAllUser: async (req, res) => {
+    try {
+      const allUser = await User.find();
+      res.status(200).json(allUser);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  },
 };
