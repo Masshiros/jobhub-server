@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const CryptoJs = require("crypto-js");
+const jwt = require("jsonwebtoken");
 module.exports = {
   createUser: async (req, res) => {
     const newUser = new User({
@@ -9,6 +10,7 @@ module.exports = {
         req.body.password,
         process.env.SECRET_SALT
       ),
+      ...req.body,
     });
     try {
       const savedUser = await newUser.save();
@@ -20,11 +22,13 @@ module.exports = {
   login: async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
+
       !user && req.status(401).json("Invalid Credentials");
       const decryptedPass = CryptoJs.AES.decrypt(
         user.password,
         process.env.SECRET_SALT
       );
+
       const depassword = decryptedPass.toString(CryptoJs.enc.Utf8);
       depassword !== req.body.password &&
         res.status(401).json("Invalid Credentials");
@@ -34,12 +38,13 @@ module.exports = {
           isAdmin: user.isAdmin,
           isAgent: user.isAgent,
         },
-        process.env.JWT_SEC,
+        process.env.JWT_SECRET,
         { expiresIn: "21d" }
       );
+
       const { password, __v, createdAt, ...others } = user._doc;
 
-      res.status(200).json(others, userToken);
+      res.status(200).json({ ...others, userToken });
     } catch (e) {
       res.status(500);
     }

@@ -15,5 +15,7 @@ router.delete("/:id", verifyAndAdmin, jobController.deleteJob);
 router.get("/:id", jobController.getJob);
 // GET ALL JOBS
 router.get("/", jobController.getJobs);
+// SEARCH JOBS
+router.get("/search/:key",jobController.searchJobs);
 
 module.exports = router;
