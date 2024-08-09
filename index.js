@@ -4,6 +4,7 @@ const { default: mongoose } = require("mongoose");
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
 const jobRoute = require("./routes/job.route");
+const bookMarkRoute = require("./routes/bookmark.route");
 const app = express();
 dotenv.config();
 const port = process.env.PORT;

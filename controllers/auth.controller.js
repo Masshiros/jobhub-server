@@ -4,13 +4,13 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   createUser: async (req, res) => {
     const newUser = new User({
+      ...req.body,
       username: req.body.username,
       email: req.body.email,
       password: CryptoJs.AES.encrypt(
         req.body.password,
         process.env.SECRET_SALT
       ),
-      ...req.body,
     });
     try {
       const savedUser = await newUser.save();
@@ -28,8 +28,9 @@ module.exports = {
         user.password,
         process.env.SECRET_SALT
       );
-
+      console.log(user.password);
       const depassword = decryptedPass.toString(CryptoJs.enc.Utf8);
+
       depassword !== req.body.password &&
         res.status(401).json("Invalid Credentials");
       const userToken = jwt.sign(
